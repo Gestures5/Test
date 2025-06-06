@@ -27,7 +27,7 @@ module.exports.handleEvent = async function ({ api, event }) {
         const apiKey = "86397083-298d-4b97-a76e-414c1208beae";
         const welcomeUrl = `https://kaiz-apis.gleeze.com/api/welcome` +
             `?username=${encodeURIComponent(name)}` +
-            `&avatarUrl=https://graph.facebook.com/${senderID}/picture?width=720&height=720` +
+            `&avatarUrl=https://i.ibb.co/DffbY7gs/494577064-1064141835095954-3209322904365365771-n-jpg-nc-cat-107-ccb-1-7-nc-sid-fc17b8-nc-ohc-QSjow-V.jpg` +
             `&groupname=${encodeURIComponent(groupName)}` +
             `&bg=${encodeURIComponent(background)}` +
             `&memberCount=${memberCount}` +
