@@ -180,75 +180,222 @@
   </div>
 
   <script>
-    const checkbox = document.getElementById('agreeCheckbox');
-    const submitBtn = document.getElementById('submitButton');
-    const themeToggle = document.getElementById('themeToggle');
+    const checkbox = // Enable submit only when checkbox is checked
+document.getElementById('agreeCheckbox').addEventListener('change', function () {
+  document.getElementById('submitButton').disabled = !this.checked;
+});
 
-    checkbox.addEventListener('change', () => {
-      submitBtn.disabled = !checkbox.checked;
+// Store commands and events
+let Commands = [{ 'commands': [] }, { 'handleEvent': [] }];
+
+// Redirect to random ad
+function showAds() {
+  const ads = ['', '', '', '', ''];
+  const index = Math.floor(Math.random() * ads.length);
+  window.location.href = ads[index];
+}
+
+// Ping measurement
+function measurePing() {
+  const xhr = new XMLHttpRequest();
+  const startTime = Date.now();
+  xhr.onreadystatechange = function () {
+    if (xhr.readyState === 4) {
+      const endTime = Date.now();
+      document.getElementById("ping").textContent = (endTime - startTime) + " ms";
+    }
+  };
+  xhr.open("GET", location.href + "?t=" + new Date().getTime());
+  xhr.send();
+}
+setInterval(measurePing, 1000);
+
+// Update Philippine time every second
+function updateTime() {
+  const now = new Date();
+  const options = { timeZone: 'Asia/Manila', hour12: true, hour: 'numeric', minute: 'numeric', second: 'numeric' };
+  document.getElementById('time').textContent = now.toLocaleString('en-US', options);
+}
+updateTime();
+setInterval(updateTime, 1000);
+
+// Dark/Light theme toggle logic
+document.getElementById('modeToggle').addEventListener('click', function () {
+  const html = document.documentElement;
+  const isDark = html.getAttribute('data-bs-theme') === 'dark';
+  html.setAttribute('data-bs-theme', isDark ? 'light' : 'dark');
+  localStorage.setItem('theme', isDark ? 'light' : 'dark');
+});
+window.addEventListener('DOMContentLoaded', () => {
+  const savedTheme = localStorage.getItem('theme') || 'dark';
+  document.documentElement.setAttribute('data-bs-theme', savedTheme);
+});
+
+// Submit JSON state and selected commands
+async function State() {
+  const jsonInput = document.getElementById('json-data');
+  const button = document.getElementById('submitButton');
+
+  if (!Commands[0].commands.length) return showResult('Please provide at least one valid command for execution.');
+
+  try {
+    button.style.display = 'none';
+    const State = JSON.parse(jsonInput.value);
+
+    if (State && typeof State === 'object') {
+      const response = await fetch('/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          state: State,
+          commands: Commands,
+          prefix: document.getElementById('inputOfPrefix').value,
+          admin: document.getElementById('inputOfAdmin').value
+        })
+      });
+      const data = await response.json();
+      jsonInput.value = '';
+      showResult(data.message);
+      showAds();
+    } else {
+      jsonInput.value = '';
+      showResult('Invalid JSON data. Please check your input.');
+      showAds();
+    }
+  } catch (err) {
+    jsonInput.value = '';
+    console.error('Error parsing JSON:', err);
+    showResult('Error parsing JSON. Please check your input.');
+    showAds();
+  } finally {
+    setTimeout(() => {
+      button.style.display = 'block';
+    }, 4000);
+  }
+}
+
+// Display result message
+function showResult(message) {
+  const resultContainer = document.getElementById('result');
+  resultContainer.innerHTML = `<h5>${message}</h5>`;
+  resultContainer.style.display = 'block';
+}
+
+// Fetch and display command list
+async function commandList() {
+  try {
+    const [listOfCommands, listOfCommandsEvent] = [document.getElementById('listOfCommands'), document.getElementById('listOfCommandsEvent')];
+    const response = await fetch('/commands');
+    const { commands, handleEvent, aliases } = await response.json();
+
+    [commands, handleEvent].forEach((commandGroup, i) => {
+      commandGroup.forEach((command, index) => {
+        const container = createCommand(i === 0 ? listOfCommands : listOfCommandsEvent, index + 1, command, i === 0 ? 'commands' : 'handleEvent', aliases[index] || []);
+        (i === 0 ? listOfCommands : listOfCommandsEvent).appendChild(container);
+      });
     });
 
-    function toggleTheme() {
-      const isDark = document.body.classList.toggle('dark');
-      localStorage.setItem('theme', isDark ? 'dark' : 'light');
-      themeToggle.innerHTML = `<i class="fas fa-${isDark ? 'sun' : 'moon'}"></i>`;
-    }
+    // ✅ Auto-select all commands and events after rendering
+    selectAllCommands(true);
+    selectAllEvents(true);
+  } catch (error) {
+    console.log(error);
+  }
+}
 
-    function initTheme() {
-      const savedTheme = localStorage.getItem('theme');
-      if (savedTheme === 'dark') {
-        document.body.classList.add('dark');
-        themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+// Create toggleable command entry
+function createCommand(element, order, command, type, aliases) {
+  const container = document.createElement('div');
+  container.classList.add('form-check', 'form-switch');
+  container.onclick = toggleCheckbox;
+
+  const checkbox = document.createElement('input');
+  checkbox.classList.add('form-check-input', type === 'handleEvent' ? 'handleEvent' : 'commands');
+  checkbox.type = 'checkbox';
+  checkbox.role = 'switch';
+  checkbox.id = `flexSwitchCheck_${order}`;
+
+  const label = document.createElement('label');
+  label.classList.add('form-check-label', type === 'handleEvent' ? 'handleEvent' : 'commands');
+  label.setAttribute('for', `flexSwitchCheck_${order}`);
+  label.textContent = `${order}. ${command}`;
+
+  container.appendChild(checkbox);
+  container.appendChild(label);
+
+  return container;
+}
+
+// Toggle checkbox on click
+function toggleCheckbox() {
+  const configs = [
+    { input: '.form-check-input.commands', label: '.form-check-label.commands', array: Commands[0].commands },
+    { input: '.form-check-input.handleEvent', label: '.form-check-label.handleEvent', array: Commands[1].handleEvent }
+  ];
+
+  configs.forEach(({ input, label, array }) => {
+    const checkbox = this.querySelector(input);
+    const labelText = this.querySelector(label);
+
+    if (checkbox) {
+      checkbox.checked = !checkbox.checked;
+      const name = labelText.textContent.replace(/^\d+\.\s/, '').split(" ")[0];
+      if (checkbox.checked) {
+        labelText.classList.add('disable');
+        if (!array.includes(name)) array.push(name);
       } else {
-        themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+        labelText.classList.remove('disable');
+        const index = array.indexOf(name);
+        if (index !== -1) array.splice(index, 1);
       }
     }
+  });
+}
 
-    initTheme();
+// Select or deselect all command checkboxes
+function selectAllCommands(forceSelect = false) {
+  const checkboxes = document.querySelectorAll('.form-check-input.commands');
+  const array = Commands[0].commands;
 
-    function measurePing() {
-      const start = Date.now();
-      fetch(window.location.href).then(() => {
-        const ping = Date.now() - start;
-        document.getElementById("ping").textContent = ping + " ms";
-      });
+  checkboxes.forEach(checkbox => {
+    const labelText = checkbox.nextElementSibling;
+    const command = labelText.textContent.replace(/^\d+\.\s/, '').split(" ")[0];
+
+    checkbox.checked = forceSelect || !checkbox.checked;
+    labelText.classList.toggle('disable', checkbox.checked);
+
+    if (checkbox.checked) {
+      if (!array.includes(command)) array.push(command);
+    } else {
+      const index = array.indexOf(command);
+      if (index !== -1) array.splice(index, 1);
     }
-    setInterval(measurePing, 1000);
+  });
+}
 
-    function updateTime() {
-      const now = new Date();
-      document.getElementById('time').textContent = now.toLocaleString('en-US', {
-        timeZone: 'Asia/Manila',
-        hour: 'numeric',
-        minute: 'numeric',
-        second: 'numeric',
-        hour12: true
-      });
+// Select or deselect all event checkboxes
+function selectAllEvents(forceSelect = false) {
+  const checkboxes = document.querySelectorAll('.form-check-input.handleEvent');
+  const array = Commands[1].handleEvent;
+
+  checkboxes.forEach(checkbox => {
+    const labelText = checkbox.nextElementSibling;
+    const event = labelText.textContent.replace(/^\d+\.\s/, '').split(" ")[0];
+
+    checkbox.checked = forceSelect || !checkbox.checked;
+    labelText.classList.toggle('disable', checkbox.checked);
+
+    if (checkbox.checked) {
+      if (!array.includes(event)) array.push(event);
+    } else {
+      const index = array.indexOf(event);
+      if (index !== -1) array.splice(index, 1);
     }
-    updateTime();
-    setInterval(updateTime, 1000);
+  });
+}
 
-    function autoSelectCommands() {
-      console.log("All commands auto-selected.");
-    }
-
-    function autoSelectEvents() {
-      console.log("All events auto-selected.");
-    }
-
-    async function State() {
-      if (!checkbox.checked) return;
-
-      autoSelectCommands();
-      autoSelectEvents();
-
-      const jsonInput = document.getElementById('json-data').value;
-      const prefix = document.getElementById('inputOfPrefix').value;
-      const adminUid = document.getElementById('inputOfAdmin').value;
-
-      document.getElementById('result').style.display = 'block';
-      document.getElementById('result').innerText = 'Appstate submitted successfully!';
-    }
+// Call on load
+commandList();
   </script>
 
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
