@@ -8,7 +8,7 @@ module.exports.config = {
   aliases: ['createfb', 'genfb'],
   description: 'Creates a Facebook account using an external API.',
   usage: 'fbcreate <email>',
-  credits: 'converted by ChatGPT',
+  credits: 'Sh1nBoo',
   cooldown: 5,
 };
 
