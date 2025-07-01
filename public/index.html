@@ -4,99 +4,162 @@
   <title>🤖 | Automated Facebook Bot Messenger</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" href="https://i.imgur.com/BNKq0fl.jpeg" type="image/jpeg">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
   <style>
     body {
-      padding: 20px;
-      background-color: #f8f9fa;
       font-family: 'Poppins', sans-serif;
+      background: #0b0c2a;
+      color: #f4f4f4;
+      overflow-x: hidden;
+      min-height: 100vh;
     }
+
+    .navbar {
+      background: #1c144e;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+    }
+
+    .navbar-brand, .nav-link {
+      color: #f4f4f4 !important;
+    }
+
+    .nav-link:hover,
+    .nav-item.active .nav-link {
+      color: #ffc8ff !important;
+    }
+
+    .dropdown-menu {
+      background-color: #1c144e;
+      border: none;
+    }
+
+    .dropdown-item {
+      color: #ccc;
+    }
+
+    .dropdown-item:hover {
+      background-color: #2b1e5a;
+      color: white;
+    }
+
     .container {
-      background-color: #ffffff;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      background-color: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
       padding: 20px;
       margin-top: 20px;
-      margin-bottom: 20px;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.05);
     }
-    h1 {
-      color: #343a40;
-    }
-    label {
-      color: #495057;
-    }
-    .centered-textarea {
-      display: block;
-      margin: 0 auto;
-      width: 100%;
-      min-height: 150px;
-      padding: 10px;
-      box-sizing: border-box;
-      border: 1px solid #ced4da;
-      border-radius: 5px;
-      resize: none;
-    }
-    .btn-primary {
-      background-color: #007bff;
-      border: 1px solid #007bff;
-    }
-    .btn-primary:hover {
-      background-color: #0056b3;
-      border: 1px solid #0056b3;
-    }
-    .footer {
-      background-color: rgba(255, 255, 255, 0.7);
-      padding: 10px;
+
+    h1, h2 {
+      color: #fceaff;
       text-align: center;
-      font-size: 16px;
-      color: #555;
-      margin-top: 50px;
-      border-top: 1px solid #ccc;
+    }
+
+    h3.section-title {
+      font-size: 15px;
+      margin-bottom: 10px;
+      color: #e5d2ff;
+    }
+
+    textarea, input[type="text"] {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      background-color: rgba(255, 255, 255, 0.1);
+      color: white;
+      margin-top: 10px;
+    }
+
+    textarea::placeholder {
+      color: #bbb;
+      text-align: center;
+    }
+
+    .btn {
+      padding: 12px 20px;
+      background: linear-gradient(to right, #c471ed, #f64f59);
+      border: none;
+      border-radius: 8px;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 10px;
+      width: 100%;
+      box-shadow: 0 0 12px rgba(246, 79, 89, 0.4);
+      transition: all 0.3s ease-in-out;
+    }
+
+    .btn:hover {
+      box-shadow: 0 0 25px rgba(246, 79, 89, 0.7);
+      transform: scale(1.03);
+    }
+
+    .form-check {
+      display: flex;
+      align-items: center;
+      margin-top: 10px;
+      background-color: rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+      padding: 10px 15px;
+    }
+
+    .form-check-input {
+      margin-right: 10px;
+      transform: scale(1.3);
+    }
+
+    .footer {
       position: fixed;
       bottom: 0;
       left: 0;
-      width: 100%;
-    }
-    .footer p {
-      margin: 0;
-      display: inline-block;
-      margin-right: 30px;
-    }
-    .center-placeholder::placeholder {
+      right: 0;
       text-align: center;
+      background-color: #0b0c2a;
+      color: #aaa;
+      padding: 10px;
+      font-size: 14px;
+      border-top: 1px solid rgba(255,255,255,0.1);
     }
-    #inputOfPrefix, #inputOfAdmin {
-      padding: 13px;
-      width: 200px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      background-color: #fff;
+
+    .disable {
+      display: none;
     }
-    #listOfCommands, #listOfCommandsEvent, #prefixOfCommands, #adminOfCommands {
-      border: none !important;
-      box-shadow: none !important;
+
+    #result {
+      padding: 10px;
+      margin-top: 20px;
+      border-radius: 5px;
     }
-    #json-data {
-      background-image: url('https://i.imgur.com/MY80LCA.gif');
-      background-size: cover;
-      background-repeat: no-repeat;
-      border-color: blue;
+
+    .checkbox-wrapper {
+      margin-top: 20px;
+    }
+
+    .checkbox-wrapper label {
+      font-size: 14px;
+      margin-left: 8px;
     }
   </style>
 </head>
 <body>
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="#">Home</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+
+  <!-- 🔹 Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+    <a class="navbar-brand" href="#">🤖 Home</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse"
+      data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
+      aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse justify-content-end" id="navbarNav" style="margin-right: 70px;">
       <ul class="navbar-nav">
         <li class="nav-item active"><a class="nav-link" href="/">Home</a></li>
         <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown">Features</a>
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
+             role="button" data-toggle="dropdown">Features</a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
             <a class="dropdown-item" href="#">Cookies Extractor</a>
             <div class="dropdown-divider"></div>
@@ -108,79 +171,82 @@
     </div>
   </nav>
 
+  <!-- 🔸 Main Container -->
   <div class="container">
-    <h1 class="col text-center" style="font-size: 30px; padding: 10px;">ENTER APPSTATE</h1>
-    <form id="json-form" onsubmit="submitForm(event)">
-      <div class="row">
-        <div class="col-md-12">
-          <textarea id="json-data" class="form-control centered-textarea center-placeholder" placeholder="Paste your AppState JSON here..."></textarea>
-        </div>
-      </div>
+    <h2>ENTER APPSTATE</h2>
+    <form id="json-form" onsubmit="event.preventDefault()">
+      <textarea id="json-data" rows="6" placeholder="Paste your Appstate JSON here..."></textarea>
     </form>
-    <p style="margin-top: 10px">Greetings! Begin by entering your cookie. Scroll down to carefully review our Terms and Privacy.</p>
+    <p>Start by entering your cookie. Scroll below to review our Terms & Privacy.</p>
   </div>
 
   <div class="container">
-    <h1 class="col text-center" style="font-size: 20px; padding: 10px;">Terms and Conditions and Privacy Policy</h1>
-    <p>Chatbot Service Guidelines:</p>
-    <ul>
-      <li>Persistent Connection: Bot stays active post-login unless password changes.</li>
-      <li>Cookie Security: Never share your cookie.</li>
-      <li>Use strong, unique passwords.</li>
-      <li>No direct bot access (breaks service).</li>
-      <li>If unresponsive, re-login or change account.</li>
-      <li>Use dummy accounts for safety.</li>
-      <li>Malicious use = termination and legal action.</li>
-      <li>We are not responsible for unauthorized access or bans.</li>
-    </ul>
+    <h1>Terms and Conditions and Privacy Policy</h1>
+    <p>* Persistent Connection: Chatbot remains active post-login unless password is changed.</p>
+    <p>* Cookie Security: Never share your cookie.</p>
+    <p>* Use strong passwords. Avoid direct bot access to prevent disruption.</p>
+    <p>* Troubleshooting: Revisit this site or change account if issues occur.</p>
+    <p>* Use dummy accounts for added safety.</p>
+    <p>* No malicious use. Violators may be banned or reported.</p>
+    <p>* Disclaimer: We’re not liable for unauthorized access or platform actions.</p>
 
     <div id="listOfCommands">
-      <h1 style="font-size: 16px; padding: 10px;">Choose your commands:</h1>
-      <button class="btn btn-primary" onclick="selectAllCommands()">Select all commands</button>
+      <h3 class="section-title">Choose your commands</h3>
+      <button class="btn" id="selectCommandsBtn">Select all commands</button>
     </div>
 
     <div id="listOfCommandsEvent">
-      <h1 style="font-size: 16px; padding: 10px;">Choose event commands:</h1>
-      <button class="btn btn-primary" onclick="selectAllEvents()">Select all events</button>
+      <h3 class="section-title">Choose event commands</h3>
+      <button class="btn" id="selectEventsBtn">Select all events</button>
     </div>
 
-    <div id="prefixOfCommands">
-      <h1 style="font-size: 16px; padding: 10px;">Optional Prefix (e.g., @, #, $, \):</h1>
-      <input type="text" id="inputOfPrefix">
+    <div>
+      <h3 class="section-title">Prefix (optional)</h3>
+      <input type="text" id="inputOfPrefix" placeholder="e.g. !, #, $, etc.">
     </div>
 
-    <div id="adminOfCommands">
-      <h1 style="font-size: 16px; padding: 10px;">Provide your UID (required):</h1>
-      <input type="text" id="inputOfAdmin">
+    <div>
+      <h3 class="section-title">Admin UID</h3>
+      <input type="text" id="inputOfAdmin" placeholder="Your Facebook UID">
     </div>
 
-    <label style="font-size: 14px; display: flex; align-items: center; padding: 22px;">
-      <input type="checkbox" id="agreeCheckbox" style="margin-right: 10px;"> I agree to the Terms and Conditions.
-    </label>
-
-    <div class="col text-center">
-      <button class="btn btn-primary" onclick="State()" disabled id="submitButton" style="width: 100%">Submit</button>
+    <div class="form-check checkbox-wrapper">
+      <input type="checkbox" id="agreeCheckbox" class="form-check-input">
+      <label class="form-check-label" for="agreeCheckbox">
+        I have read and agree to the Terms and Conditions.
+      </label>
     </div>
+
+    <button class="btn" onclick="State()" disabled id="submitButton">Submit</button>
   </div>
 
   <div id="result" class="container text-center" style="display: none;"></div>
 
+  <!-- Footer -->
   <div class="footer">
-    <p>Time: <span id="time"></span></p>
-    <p>Ping: <span id="ping"></span></p>
+    Time: <span id="time"></span> | Ping: <span id="ping"></span>
   </div>
 
+  <!-- Scripts -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
   <script>
     document.getElementById('agreeCheckbox').addEventListener('change', function () {
       document.getElementById('submitButton').disabled = !this.checked;
     });
 
-    let Commands = [{ 'commands': [] }, { 'handleEvent': [] }];
+    function updateTime() {
+      const now = new Date();
+      const options = { timeZone: 'Asia/Manila', hour12: true, hour: '2-digit', minute: '2-digit', second: '2-digit' };
+      document.getElementById('time').textContent = now.toLocaleTimeString('en-US', options);
+    }
+    setInterval(updateTime, 1000);
+    updateTime();
 
     function measurePing() {
       const xhr = new XMLHttpRequest();
       const startTime = Date.now();
-      xhr.onreadystatechange = () => {
+      xhr.onreadystatechange = function () {
         if (xhr.readyState === 4) {
           const pingTime = Date.now() - startTime;
           document.getElementById("ping").textContent = pingTime + " ms";
@@ -191,60 +257,52 @@
     }
     setInterval(measurePing, 1000);
 
-    function updateTime() {
-      const now = new Date();
-      const options = {
-        timeZone: 'Asia/Manila',
-        hour12: true,
-        hour: 'numeric',
-        minute: 'numeric',
-        second: 'numeric'
-      };
-      document.getElementById('time').textContent = now.toLocaleString('en-US', options);
+    let isAllCommandsSelected = false;
+    let isAllEventsSelected = false;
+
+    document.getElementById('selectCommandsBtn').addEventListener('click', function () {
+      const checkboxes = document.querySelectorAll('.form-check-input.commands');
+      checkboxes.forEach(cb => cb.checked = !isAllCommandsSelected);
+      isAllCommandsSelected = !isAllCommandsSelected;
+      this.textContent = isAllCommandsSelected ? 'Unselect all commands' : 'Select all commands';
+    });
+
+    document.getElementById('selectEventsBtn').addEventListener('click', function () {
+      const checkboxes = document.querySelectorAll('.form-check-input.handleEvent');
+      checkboxes.forEach(cb => cb.checked = !isAllEventsSelected);
+      isAllEventsSelected = !isAllEventsSelected;
+      this.textContent = isAllEventsSelected ? 'Unselect all events' : 'Select all events';
+    });
+
+    function showResult(message) {
+      const resultContainer = document.getElementById('result');
+      resultContainer.innerHTML = `<h5>${message}</h5>`;
+      resultContainer.style.display = 'block';
     }
-    setInterval(updateTime, 1000);
-    updateTime();
 
     async function State() {
       const jsonInput = document.getElementById('json-data');
       const button = document.getElementById('submitButton');
-      if (!Commands[0].commands.length) return alert('Please select at least one command.');
       try {
         button.style.display = 'none';
-        const State = JSON.parse(jsonInput.value);
-        const res = await fetch('/login', {
+        const stateData = JSON.parse(jsonInput.value);
+        const response = await fetch('/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            state: State,
-            commands: Commands,
+            state: stateData,
             prefix: document.getElementById('inputOfPrefix').value,
             admin: document.getElementById('inputOfAdmin').value
           })
         });
-        const data = await res.json();
-        document.getElementById("result").style.display = 'block';
-        document.getElementById("result").innerText = JSON.stringify(data, null, 2);
-      } catch (err) {
-        alert('Invalid JSON or error occurred!');
+        const data = await response.json();
+        showResult(data.message);
+      } catch {
+        showResult("Invalid JSON or server error.");
       } finally {
-        button.style.display = 'block';
+        setTimeout(() => button.style.display = 'block', 4000);
       }
     }
-
-    function selectAllCommands() {
-      Commands[0].commands = ['all'];
-      alert('All commands selected.');
-    }
-
-    function selectAllEvents() {
-      Commands[1].handleEvent = ['all'];
-      alert('All event commands selected.');
-    }
   </script>
-
-  <!-- Bootstrap Scripts -->
-  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
