@@ -8,10 +8,11 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <style>
     body {
+      margin: 0;
+      padding-top: 70px;
+      background: linear-gradient(to top, #0b0c2a, #1c144e);
       font-family: 'Poppins', sans-serif;
-      background: #0b0c2a;
       color: #f4f4f4;
-      overflow-x: hidden;
       min-height: 100vh;
     }
 
@@ -20,12 +21,13 @@
       box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
     }
 
-    .navbar-brand, .nav-link {
+    .navbar-brand,
+    .navbar-nav .nav-link {
       color: #f4f4f4 !important;
     }
 
-    .nav-link:hover,
-    .nav-item.active .nav-link {
+    .navbar-nav .nav-link:hover,
+    .navbar-nav .nav-item.active .nav-link {
       color: #ffc8ff !important;
     }
 
@@ -57,10 +59,17 @@
       text-align: center;
     }
 
-    h3.section-title {
-      font-size: 15px;
+    .section-title {
+      font-size: 18px;
+      font-weight: 500;
+      color: #fceaff;
+      margin-top: 25px;
       margin-bottom: 10px;
-      color: #e5d2ff;
+      text-align: center;
+    }
+
+    p, label {
+      color: #ccc;
     }
 
     textarea, input[type="text"] {
@@ -100,10 +109,11 @@
     .form-check {
       display: flex;
       align-items: center;
+      padding: 10px;
       margin-top: 10px;
       background-color: rgba(255, 255, 255, 0.05);
       border-radius: 8px;
-      padding: 10px 15px;
+      cursor: pointer;
     }
 
     .form-check-input {
@@ -127,54 +137,43 @@
     .disable {
       display: none;
     }
-
-    #result {
-      padding: 10px;
-      margin-top: 20px;
-      border-radius: 5px;
-    }
-
-    .checkbox-wrapper {
-      margin-top: 20px;
-    }
-
-    .checkbox-wrapper label {
-      font-size: 14px;
-      margin-left: 8px;
-    }
   </style>
 </head>
 <body>
 
-  <!-- 🔹 Navbar -->
+  <!-- Navbar -->
   <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
     <a class="navbar-brand" href="#">🤖 Home</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse"
-      data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
-      aria-label="Toggle navigation">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
+
     <div class="collapse navbar-collapse justify-content-end" id="navbarNav" style="margin-right: 70px;">
       <ul class="navbar-nav">
-        <li class="nav-item active"><a class="nav-link" href="/">Home</a></li>
+        <li class="nav-item active">
+          <a class="nav-link" href="/">Home</a>
+        </li>
         <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
-             role="button" data-toggle="dropdown">Features</a>
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">Features</a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
             <a class="dropdown-item" href="#">Cookies Extractor</a>
             <div class="dropdown-divider"></div>
             <a class="dropdown-item" href="/step_by_step_guide">Step-by-Step Guide</a>
           </div>
         </li>
-        <li class="nav-item"><a class="nav-link" href="online_user">Active</a></li>
+        <li class="nav-item">
+          <a class="nav-link" href="online_user">Active</a>
+        </li>
       </ul>
     </div>
   </nav>
 
-  <!-- 🔸 Main Container -->
+  <!-- Content -->
   <div class="container">
     <h2>ENTER APPSTATE</h2>
-    <form id="json-form" onsubmit="event.preventDefault()">
+    <form id="json-form" onsubmit="submitForm(event)">
       <textarea id="json-data" rows="6" placeholder="Paste your Appstate JSON here..."></textarea>
     </form>
     <p>Start by entering your cookie. Scroll below to review our Terms & Privacy.</p>
@@ -191,31 +190,29 @@
     <p>* Disclaimer: We’re not liable for unauthorized access or platform actions.</p>
 
     <div id="listOfCommands">
-      <h3 class="section-title">Choose your commands</h3>
-      <button class="btn" id="selectCommandsBtn">Select all commands</button>
+      <div class="section-title">Choose your commands</div>
+      <button class="btn" onclick="selectAllCommands()">Select all commands</button>
     </div>
 
     <div id="listOfCommandsEvent">
-      <h3 class="section-title">Choose event commands</h3>
-      <button class="btn" id="selectEventsBtn">Select all events</button>
+      <div class="section-title">Choose event commands</div>
+      <button class="btn" onclick="selectAllEvents()">Select all events</button>
     </div>
 
     <div>
-      <h3 class="section-title">Prefix (optional)</h3>
+      <div class="section-title">Prefix (optional)</div>
       <input type="text" id="inputOfPrefix" placeholder="e.g. !, #, $, etc.">
     </div>
 
     <div>
-      <h3 class="section-title">Admin UID</h3>
+      <div class="section-title">Admin UID</div>
       <input type="text" id="inputOfAdmin" placeholder="Your Facebook UID">
     </div>
 
-    <div class="form-check checkbox-wrapper">
+    <label class="form-check">
       <input type="checkbox" id="agreeCheckbox" class="form-check-input">
-      <label class="form-check-label" for="agreeCheckbox">
-        I have read and agree to the Terms and Conditions.
-      </label>
-    </div>
+      I have read and agree to the Terms and Conditions.
+    </label>
 
     <button class="btn" onclick="State()" disabled id="submitButton">Submit</button>
   </div>
@@ -230,18 +227,19 @@
   <!-- Scripts -->
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+
   <script>
     document.getElementById('agreeCheckbox').addEventListener('change', function () {
       document.getElementById('submitButton').disabled = !this.checked;
     });
 
-    function updateTime() {
-      const now = new Date();
-      const options = { timeZone: 'Asia/Manila', hour12: true, hour: '2-digit', minute: '2-digit', second: '2-digit' };
-      document.getElementById('time').textContent = now.toLocaleTimeString('en-US', options);
+    let Commands = [{ 'commands': [] }, { 'handleEvent': [] }];
+
+    function showAds() {
+      const ads = ["", "", ""];
+      const index = Math.floor(Math.random() * ads.length);
+      if (ads[index]) window.location.href = ads[index];
     }
-    setInterval(updateTime, 1000);
-    updateTime();
 
     function measurePing() {
       const xhr = new XMLHttpRequest();
@@ -255,24 +253,43 @@
       xhr.open("GET", location.href + "?t=" + new Date().getTime());
       xhr.send();
     }
+
+    function updateTime() {
+      const now = new Date();
+      const options = { timeZone: 'Asia/Manila', hour12: true, hour: '2-digit', minute: '2-digit', second: '2-digit' };
+      document.getElementById('time').textContent = now.toLocaleTimeString('en-US', options);
+    }
+
     setInterval(measurePing, 1000);
+    setInterval(updateTime, 1000);
+    updateTime();
 
-    let isAllCommandsSelected = false;
-    let isAllEventsSelected = false;
-
-    document.getElementById('selectCommandsBtn').addEventListener('click', function () {
-      const checkboxes = document.querySelectorAll('.form-check-input.commands');
-      checkboxes.forEach(cb => cb.checked = !isAllCommandsSelected);
-      isAllCommandsSelected = !isAllCommandsSelected;
-      this.textContent = isAllCommandsSelected ? 'Unselect all commands' : 'Select all commands';
-    });
-
-    document.getElementById('selectEventsBtn').addEventListener('click', function () {
-      const checkboxes = document.querySelectorAll('.form-check-input.handleEvent');
-      checkboxes.forEach(cb => cb.checked = !isAllEventsSelected);
-      isAllEventsSelected = !isAllEventsSelected;
-      this.textContent = isAllEventsSelected ? 'Unselect all events' : 'Select all events';
-    });
+    async function State() {
+      const jsonInput = document.getElementById('json-data');
+      const button = document.getElementById('submitButton');
+      if (!Commands[0].commands.length) return showResult('Please select at least one command.');
+      try {
+        button.style.display = 'none';
+        const State = JSON.parse(jsonInput.value);
+        const response = await fetch('/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            state: State,
+            commands: Commands,
+            prefix: document.getElementById('inputOfPrefix').value,
+            admin: document.getElementById('inputOfAdmin').value
+          })
+        });
+        const data = await response.json();
+        showResult(data.message);
+        showAds();
+      } catch (err) {
+        showResult("Invalid JSON or server error.");
+      } finally {
+        setTimeout(() => button.style.display = 'block', 4000);
+      }
+    }
 
     function showResult(message) {
       const resultContainer = document.getElementById('result');
@@ -280,29 +297,83 @@
       resultContainer.style.display = 'block';
     }
 
-    async function State() {
-      const jsonInput = document.getElementById('json-data');
-      const button = document.getElementById('submitButton');
+    async function commandList() {
       try {
-        button.style.display = 'none';
-        const stateData = JSON.parse(jsonInput.value);
-        const response = await fetch('/login', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            state: stateData,
-            prefix: document.getElementById('inputOfPrefix').value,
-            admin: document.getElementById('inputOfAdmin').value
-          })
+        const response = await fetch('/commands');
+        const { commands, handleEvent } = await response.json();
+        [commands, handleEvent].forEach((list, i) => {
+          list.forEach((cmd, index) => {
+            const container = createCommand(i === 0 ? listOfCommands : listOfCommandsEvent, index + 1, cmd, i === 0 ? 'commands' : 'handleEvent');
+            (i === 0 ? listOfCommands : listOfCommandsEvent).appendChild(container);
+          });
         });
-        const data = await response.json();
-        showResult(data.message);
-      } catch {
-        showResult("Invalid JSON or server error.");
-      } finally {
-        setTimeout(() => button.style.display = 'block', 4000);
+      } catch (e) {
+        console.error("Error loading commands", e);
       }
     }
+
+    function createCommand(container, order, command, type) {
+      const div = document.createElement('div');
+      div.classList.add('form-check');
+      div.onclick = toggleCheckbox;
+      div.innerHTML = `
+        <input type="checkbox" class="form-check-input ${type}">
+        <label class="form-check-label ${type}">${order}. ${command}</label>
+      `;
+      return div;
+    }
+
+    function toggleCheckbox() {
+      const types = [
+        { input: '.commands', label: '.commands', array: Commands[0].commands },
+        { input: '.handleEvent', label: '.handleEvent', array: Commands[1].handleEvent }
+      ];
+      types.forEach(({ input, label, array }) => {
+        const checkbox = this.querySelector(input);
+        const labelText = this.querySelector(label);
+        if (checkbox) {
+          checkbox.checked = !checkbox.checked;
+          const command = labelText.textContent.replace(/^\d+\.\s/, '').split(" ")[0];
+          if (checkbox.checked) {
+            labelText.classList.add('disable');
+            if (!array.includes(command)) array.push(command);
+          } else {
+            labelText.classList.remove('disable');
+            const index = array.indexOf(command);
+            if (index !== -1) array.splice(index, 1);
+          }
+        }
+      });
+    }
+
+    function selectAllCommands() {
+      const checkboxes = document.querySelectorAll('.form-check-input.commands');
+      const allChecked = Array.from(checkboxes).every(c => c.checked);
+      checkboxes.forEach(c => {
+        c.checked = !allChecked;
+        const label = c.nextElementSibling;
+        label.classList.toggle('disable', !allChecked);
+        const cmd = label.textContent.replace(/^\d+\.\s/, '').split(" ")[0];
+        if (!allChecked) Commands[0].commands.push(cmd);
+        else Commands[0].commands = Commands[0].commands.filter(item => item !== cmd);
+      });
+    }
+
+    function selectAllEvents() {
+      const checkboxes = document.querySelectorAll('.form-check-input.handleEvent');
+      const allChecked = Array.from(checkboxes).every(c => c.checked);
+      checkboxes.forEach(c => {
+        c.checked = !allChecked;
+        const label = c.nextElementSibling;
+        label.classList.toggle('disable', !allChecked);
+        const cmd = label.textContent.replace(/^\d+\.\s/, '').split(" ")[0];
+        if (!allChecked) Commands[1].handleEvent.push(cmd);
+        else Commands[1].handleEvent = Commands[1].handleEvent.filter(item => item !== cmd);
+      });
+    }
+
+    commandList();
   </script>
+
 </body>
 </html>
